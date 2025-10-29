@@ -25,81 +25,44 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Welcome to Flutter'),
-        centerTitle: true,
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: Center(
-        child: SingleChildScrollView( // Para evitar overflow si el contenido es largo
+      body: Container(
+        // Imagen de fondo
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/background.jpg'), // Ruta de la imagen
+            fit: BoxFit.cover, // Ajusta la imagen al tamaño de la pantalla
+          ),
+        ),
+        // Contenido centrado
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Hello World',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            children: const [
+              // Icono
+              Icon(
+                Icons.flutter_dash,
+                size: 80,
+                color: Colors.white,
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
 
-              // --- Text Widget ---
-              const Text(
-                'Este es un widget de texto.',
-                style: TextStyle(fontSize: 18, color: Colors.blueGrey),
-              ),
-              const SizedBox(height: 20),
-
-              // --- Row Widget ---
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 60,
-                    height: 60,
-                    color: Colors.blue,
-                  ),
-                  const SizedBox(width: 10),
-                  Container(
-                    width: 60,
-                    height: 60,
-                    color: Colors.green,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-
-              // --- Column Widget ---
-              Column(
-                children: const [
-                  Text('Elemento 1 en columna'),
-                  Text('Elemento 2 en columna'),
-                ],
-              ),
-              const SizedBox(height: 20),
-
-              // --- Stack Widget ---
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    width: 150,
-                    height: 100,
-                    color: Colors.grey[400],
-                  ),
-                  const Text('Texto encima del Container'),
-                ],
-              ),
-              const SizedBox(height: 20),
-
-              // --- Container Widget ---
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.deepPurple,
-                  borderRadius: BorderRadius.circular(12),
+              // Nombre de la app
+              Text(
+                'Welcome to Flutter',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
-                child: const Text(
-                  'Soy un Container con estilo',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+              SizedBox(height: 20),
+
+              // Mensaje de bienvenida
+              Text(
+                'Hello World',
+                style: TextStyle(
+                  fontSize: 22,
+                  color: Colors.white,
                 ),
               ),
             ],
