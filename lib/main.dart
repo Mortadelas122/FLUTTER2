@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 void main() {
   runApp(const MyApp());
@@ -26,28 +28,23 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        // Imagen de fondo
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/background.jpg'), // Ruta de la imagen
-            fit: BoxFit.cover, // Ajusta la imagen al tamaño de la pantalla
+            image: AssetImage('assets/background.jpg'),
+            fit: BoxFit.cover,
           ),
         ),
-        // Contenido centrado
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              // Icono
-              Icon(
+            children: [
+              const Icon(
                 Icons.flutter_dash,
                 size: 80,
                 color: Colors.white,
               ),
-              SizedBox(height: 20),
-
-              // Nombre de la app
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'Welcome to Flutter',
                 style: TextStyle(
                   fontSize: 28,
@@ -55,19 +52,93 @@ class MyHomePage extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              SizedBox(height: 20),
-
-              // Mensaje de bienvenida
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'Hello World',
                 style: TextStyle(
                   fontSize: 22,
                   color: Colors.white,
                 ),
               ),
+              const SizedBox(height: 40),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const PokemonPage()),
+                  );
+                },
+                child: const Text('Ver Pokémon'),
+              ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+// Nueva pantalla: Consulta HTTP a PokéAPI
+class PokemonPage extends StatefulWidget {
+  const PokemonPage({super.key});
+
+  @override
+  State<PokemonPage> createState() => _PokemonPageState();
+}
+
+class _PokemonPageState extends State<PokemonPage> {
+  String? pokemonName;
+  String? imageUrl;
+
+  Future<void> fetchPokemon() async {
+    final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon/pikachu'));
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      setState(() {
+        pokemonName = data['name'];
+        imageUrl = data['sprites']['front_default'];
+      });
+    } else {
+      setState(() {
+        pokemonName = 'Error al cargar';
+        imageUrl = null;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchPokemon();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('PokéAPI Demo'),
+      ),
+      body: Center(
+        child: pokemonName == null
+            ? const CircularProgressIndicator()
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (imageUrl != null)
+                    Image.network(imageUrl!, height: 150),
+                  const SizedBox(height: 20),
+                  Text(
+                    pokemonName!.toUpperCase(),
+                    style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: fetchPokemon,
+                    child: const Text('Actualizar Pokémon'),
+                  ),
+                ],
+              ),
       ),
     );
   }
