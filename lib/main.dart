@@ -2,7 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-void main() {
+//Importaciones para Firebase
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Necesario antes de inicializar Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -78,7 +86,7 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
-// Nueva pantalla: Consulta HTTP a PokéAPI
+// 🧩 Pantalla que usa la PokéAPI
 class PokemonPage extends StatefulWidget {
   const PokemonPage({super.key});
 
@@ -91,7 +99,8 @@ class _PokemonPageState extends State<PokemonPage> {
   String? imageUrl;
 
   Future<void> fetchPokemon() async {
-    final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon/pikachu'));
+    final response =
+        await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon/pikachu'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -125,12 +134,12 @@ class _PokemonPageState extends State<PokemonPage> {
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (imageUrl != null)
-                    Image.network(imageUrl!, height: 150),
+                  if (imageUrl != null) Image.network(imageUrl!, height: 150),
                   const SizedBox(height: 20),
                   Text(
                     pokemonName!.toUpperCase(),
-                    style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 26, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
